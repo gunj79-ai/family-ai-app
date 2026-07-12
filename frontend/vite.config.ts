@@ -57,6 +57,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 4173,
     hmr: false, // Disable hot module replacement for preview
+    allowedHosts: ['family-ai-app-2.onrender.com', 'family-ai-backend-nfvj.onrender.com'],
   },
 
   build: {
