@@ -9,6 +9,7 @@ export function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [isAddingUser, setIsAddingUser] = useState(false);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [resettingPasswordUserId, setResettingPasswordUserId] = useState<string | null>(null);
   const [resetPasswordValue, setResetPasswordValue] = useState('');
@@ -50,6 +51,7 @@ export function UserManagement() {
       return;
     }
 
+    setIsCreatingUser(true);
     try {
       const payload = {
         username: formData.username.trim(),
@@ -59,7 +61,8 @@ export function UserManagement() {
         age: formData.age ? parseInt(formData.age, 10) : null,
       };
 
-      await apiClient.post('/users', payload);
+      const response = await apiClient.post('/users', payload);
+      console.log('User created:', response.data);
       toast.success(`User ${formData.username} created successfully`);
       
       // Reset form and reload
@@ -73,7 +76,11 @@ export function UserManagement() {
       setIsAddingUser(false);
       await loadUsers();
     } catch (error: any) {
-      toast.error(error?.message || 'Failed to create user');
+      console.error('Create user error:', error);
+      const errorMsg = error?.response?.data?.error || error?.message || 'Failed to create user';
+      toast.error(errorMsg);
+    } finally {
+      setIsCreatingUser(false);
     }
   }
 
@@ -215,12 +222,18 @@ export function UserManagement() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                disabled={isCreatingUser}
+                className={`flex-1 px-4 py-2 font-medium rounded-lg transition-colors text-sm ${
+                  isCreatingUser
+                    ? 'bg-slate-400 text-white cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
               >
-                Create User
+                {isCreatingUser ? 'Creating...' : 'Create User'}
               </button>
               <button
                 type="button"
+                disabled={isCreatingUser}
                 onClick={() => {
                   setIsAddingUser(false);
                   setFormData({
@@ -231,7 +244,11 @@ export function UserManagement() {
                     age: '',
                   });
                 }}
-                className="flex-1 px-4 py-2 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-colors text-sm"
+                className={`flex-1 px-4 py-2 font-medium rounded-lg transition-colors text-sm ${
+                  isCreatingUser
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                }`}
               >
                 Cancel
               </button>
