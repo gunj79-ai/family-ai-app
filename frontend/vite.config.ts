@@ -38,6 +38,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     middlewareMode: false,
+    hmr: false, // Disable hot module replacement to prevent refresh issues
     // Only use proxy for localhost development
     // For network access, frontend will use VITE_API_BASE_URL
     proxy: {
