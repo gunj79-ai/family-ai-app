@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt', // Show prompt instead of auto-updating to prevent refresh spam
 
       // Dynamic manifest served by Express — disable static generation
       manifest: false,
