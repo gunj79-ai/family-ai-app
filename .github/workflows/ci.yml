@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-backend:
+    runs-on: ubuntu-latest
+    name: Backend verification
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend deps
+        run: cd backend && npm ci
+
+      - name: TypeScript check
+        run: cd backend && npx tsc --noEmit
+
+      - name: Check no secrets in code
+        run: |
+          # Fail if any file contains what looks like a real API key
+          if grep -r "sk-ant-api" --include="*.ts" --include="*.js" \
+            --exclude-dir=node_modules .; then
+            echo "FAIL: Real API key found in source code"
+            exit 1
+          fi
+          echo "PASS: No hardcoded API keys found"
+
+  verify-frontend:
+    runs-on: ubuntu-latest
+    name: Frontend verification
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend deps
+        run: cd frontend && npm ci
+
+      - name: TypeScript check
+        run: cd frontend && npx tsc --noEmit
+
+      - name: Build
+        run: cd frontend && npm run build
+
+      - name: Check build output
+        run: |
+          test -f backend/public/index.html || (echo "FAIL: index.html missing" && exit 1)
+          test -f backend/public/sw.js || (echo "FAIL: sw.js missing" && exit 1)
+          echo "PASS: Build output verified"

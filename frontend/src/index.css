@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body {
+    @apply bg-surface text-gray-900 font-sans;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  :root {
+    --sidebar-width: 280px;
+    --topbar-height: 56px;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #e5e7eb transparent;
+  }
+}

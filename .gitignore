@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment — NEVER commit these
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Data — NEVER commit (contains user conversations)
+data/
+!data/.gitkeep
+
+# Build output
+frontend/dist/
+backend/public/
+backend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# Test artifacts
+coverage/
+
+# Tailscale certs
+*.crt
+*.key
+*.pem
+
+# Package manager locks (per npm best practices)
+package-lock.json
+pnpm-lock.yaml
