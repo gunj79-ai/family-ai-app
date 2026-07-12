@@ -70,11 +70,15 @@ messagesRouter.post('/', parentalGuard, async (req, res) => {
   if (!chat) return res.status(404).json({ error: 'Chat not found' });
   if (chat.user_id !== req.user!.id) return res.status(403).json({ error: 'Forbidden' });
 
-  // SSE headers
+  // SSE headers with proper CORS for streaming
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setTimeout(300000); // 5 minute timeout for streaming
   res.flushHeaders();
 
   const send = (data: object) => {

@@ -11,6 +11,12 @@ interface SendOptions {
   attachmentIds?: string[];
 }
 
+// Helper to get backend URL - always port 3001 regardless of frontend port
+const getBackendUrl = () => {
+  const hostname = window.location.hostname;
+  return `http://${hostname}:3001`;
+};
+
 export function useChat() {
   const navigate = useNavigate();
   const { token } = useAuthStore();
@@ -42,7 +48,8 @@ export function useChat() {
     let accumulatedContent = ''; // Track streamed content locally
 
     try {
-      const response = await fetch(`/api/chats/${chatId}/messages`, {
+      const backendUrl = getBackendUrl();
+      const response = await fetch(`${backendUrl}/api/chats/${chatId}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

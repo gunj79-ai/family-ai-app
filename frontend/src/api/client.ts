@@ -4,12 +4,8 @@ const getBaseURL = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
   if (envUrl) return envUrl;
   
-  // If accessing via localhost, keep using same origin
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return window.location.origin;
-  }
-  
-  // For network access (e.g., 192.168.1.236:4176), point to backend on port 3001
+  // Always use port 3001 for backend, regardless of frontend port
+  // Works for both localhost (127.0.0.1:3001) and network IPs (192.168.x.x:3001)
   const hostname = window.location.hostname;
   return `http://${hostname}:3001`;
 };
