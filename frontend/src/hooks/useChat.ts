@@ -11,8 +11,12 @@ interface SendOptions {
   attachmentIds?: string[];
 }
 
-// Helper to get backend URL - always port 3001 regardless of frontend port
+// Helper to get backend URL - matches client.ts logic
 const getBackendUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl) return envUrl;
+  
+  // Fallback: Use port 3001 for backend on same hostname
   const hostname = window.location.hostname;
   return `http://${hostname}:3001`;
 };
