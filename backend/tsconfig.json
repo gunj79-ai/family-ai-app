@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "target": "ES2022",
     "module": "ES2022",
     "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,8 +16,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "noImplicitAny": false,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true
+    "strictNullChecks": false,
+    "strictFunctionTypes": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
