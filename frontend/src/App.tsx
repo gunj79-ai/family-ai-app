@@ -6,7 +6,7 @@ import { AdminPage } from '@/pages/AdminPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { SetupPage } from '@/pages/SetupPage';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
-import { ToastContainer } from '@/components/ui/toast';
+import { ToastContainer } from '@/components/ui/Toast';
 import { useConfigStore } from '@/store/configStore';
 import { useTheme } from '@/hooks/useTheme';
 

@@ -8,7 +8,7 @@ import { useChatStore } from '@/store/chatStore';
 import { apiClient } from '@/api/client';
 import { AttachmentPreview, PendingAttachment } from './AttachmentPreview';
 import { useToast } from '@/hooks/useToast';
-import { toastError } from '@/components/ui/toast';
+import { toastError } from '@/components/ui/Toast';
 
 interface Props {
   chatId: string;

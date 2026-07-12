@@ -3,7 +3,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/store/authStore';
-import { toastSuccess, toastError } from '@/components/ui/toast';
+import { toastSuccess, toastError } from '@/components/ui/Toast';
 import { apiClient } from '@/api/client';
 import { User } from 'lucide-react';
 
