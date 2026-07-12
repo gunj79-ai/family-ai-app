@@ -6,28 +6,25 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
-      registerType: 'prompt', // Show prompt instead of auto-updating to prevent refresh spam
-
-      // Dynamic manifest served by Express — disable static generation
-      manifest: false,
-
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        navigateFallbackDenylist: [/^\/api\//],
-        navigateFallback: '/index.html',
-        runtimeCaching: [
-          {
-            urlPattern: /^\/api\/.*/,
-            handler: 'NetworkOnly',
-          },
-        ],
-      },
-
-      devOptions: {
-        enabled: false,
-      },
-    }),
+    // PWA disabled during development - causing refresh spam issues
+    // VitePWA({
+    //   registerType: 'prompt',
+    //   manifest: false,
+    //   workbox: {
+    //     globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+    //     navigateFallbackDenylist: [/^\/api\//],
+    //     navigateFallback: '/index.html',
+    //     runtimeCaching: [
+    //       {
+    //         urlPattern: /^\/api\/.*/,
+    //         handler: 'NetworkOnly',
+    //       },
+    //     ],
+    //   },
+    //   devOptions: {
+    //     enabled: false,
+    //   },
+    // }),
   ],
 
   resolve: {
