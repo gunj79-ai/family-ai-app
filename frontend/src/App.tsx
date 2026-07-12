@@ -7,10 +7,8 @@ import { SettingsPage } from '@/pages/SettingsPage';
 import { SetupPage } from '@/pages/SetupPage';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { ToastContainer } from '@/components/ui/toast';
-import { PwaInstallPrompt } from '@/components/ui/PwaInstallPrompt';
 import { useConfigStore } from '@/store/configStore';
 import { useTheme } from '@/hooks/useTheme';
-import { usePwaUpdate } from '@/hooks/usePwaUpdate';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -19,7 +17,6 @@ const queryClient = new QueryClient({
 function AppContent() {
   const { setupComplete } = useConfigStore();
   useTheme();
-  usePwaUpdate();
 
   if (!setupComplete) {
     return (
@@ -56,7 +53,6 @@ export default function App() {
       <BrowserRouter>
         <AppContent />
       </BrowserRouter>
-      <PwaInstallPrompt />
       <ToastContainer />
     </QueryClientProvider>
   );
