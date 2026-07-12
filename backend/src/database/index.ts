@@ -124,7 +124,11 @@ export async function initDatabase(): Promise<void> {
   db = new PersistentDatabase(sqlDb) as any;
 
   // Run schema
-  const schemaPath = path.resolve(__dirname, 'schema.sql');
+  let schemaPath = path.resolve(__dirname, 'schema.sql');
+  // Fallback for development
+  if (!fs.existsSync(schemaPath)) {
+    schemaPath = path.resolve(__dirname, '../../src/database/schema.sql');
+  }
   const schema = fs.readFileSync(schemaPath, 'utf-8');
   db.exec(schema);
 
