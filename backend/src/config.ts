@@ -22,7 +22,13 @@ export const config = {
   NODE_ENV: getEnv('NODE_ENV', 'development'),
   CORS_ORIGINS: process.env.NODE_ENV === 'development' 
     ? '*'  // Allow all origins in dev
-    : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:3001'],
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:3001',
+        'https://family-ai-app-2.onrender.com',
+        'https://family-ai-backend-nfvj.onrender.com',
+      ],
 
   // Security
   JWT_SECRET: getEnv('JWT_SECRET'),
