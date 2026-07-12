@@ -6,6 +6,7 @@ import { useChatStore } from '@/store/chatStore';
 import { useAuthStore } from '@/store/authStore';
 import { getRandomDadJoke } from '@/data/dadJokes';
 import { useChat } from '@/hooks/useChat';
+import { useToastStore } from '@/hooks/useToast';
 import type { Chat } from '@/types';
 
 interface Props {
@@ -26,7 +27,12 @@ export function ChatWindow({ chat }: Props) {
   }, [messages.length, streamingContent]);
 
   async function handleSend(content: string, attachmentIds: string[]) {
-    await sendMessage({ chatId: chat.id, content, attachmentIds });
+    try {
+      await sendMessage({ chatId: chat.id, content, attachmentIds });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to send message';
+      useToastStore.getState().addToast(message, 'error');
+    }
   }
 
   return (

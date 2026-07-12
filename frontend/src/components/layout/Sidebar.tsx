@@ -12,6 +12,7 @@ import { useUIStore } from '@/store/uiStore';
 import { useChatStore } from '@/store/chatStore';
 import { useProjects, useChats } from '@/hooks/useProjects';
 import { useChat } from '@/hooks/useChat';
+import { useToastStore } from '@/hooks/useToast';
 import { relativeTime } from '@/utils/dates';
 import { authApi } from '@/api/auth';
 import { ProjectModal } from '@/components/project/ProjectModal';
@@ -47,9 +48,14 @@ export function Sidebar() {
   }
 
   async function handleSelectChat(chat: Chat) {
-    await loadChat(chat);
-    navigate(`/chat/${chat.id}`);
-    if (isMobile) setSidebarOpen(false);
+    try {
+      await loadChat(chat);
+      navigate(`/chat/${chat.id}`);
+      if (isMobile) setSidebarOpen(false);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load chat';
+      useToastStore.getState().addToast(message, 'error');
+    }
   }
 
   async function handleLogout() {

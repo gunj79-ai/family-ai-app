@@ -12,11 +12,17 @@ function hexToRgb(hex: string): string {
 }
 
 export function useTheme() {
-  const { settings } = useAuthStore();
+  const { settings, user } = useAuthStore();
   const theme = settings?.theme || 'system';
 
-  // Load and apply primary color from server
+  // Load and apply primary color from server (admin only)
   useEffect(() => {
+    if (user?.role !== 'admin') {
+      document.documentElement.style.setProperty('--primary-color', '#6366f1');
+      document.documentElement.style.setProperty('--primary-rgb', '99 102 241');
+      return;
+    }
+
     apiClient
       .get('/admin/settings')
       .then((res) => {
@@ -28,7 +34,7 @@ export function useTheme() {
         document.documentElement.style.setProperty('--primary-color', '#6366f1');
         document.documentElement.style.setProperty('--primary-rgb', '99 102 241');
       });
-  }, []);
+  }, [user?.role]);
 
   // Apply theme preference
   useEffect(() => {

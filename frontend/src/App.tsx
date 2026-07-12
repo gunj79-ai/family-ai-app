@@ -11,7 +11,13 @@ import { useConfigStore } from '@/store/configStore';
 import { useTheme } from '@/hooks/useTheme';
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
+  defaultOptions: {
+    queries: {
+      retry: (failureCount) => failureCount < 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      staleTime: 30_000,
+    },
+  },
 });
 
 function AppContent() {

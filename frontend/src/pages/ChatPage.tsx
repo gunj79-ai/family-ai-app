@@ -27,7 +27,7 @@ export function ChatPage() {
       }
     }
     init();
-  }, [chatId, chats.length]);
+  }, [chatId, chats, activeChat, loadChat, navigate]);
 
   return (
     <AppShell>

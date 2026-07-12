@@ -2,6 +2,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { Settings } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import { useToast } from '@/hooks/useToast';
+import { useAuthStore } from '@/store/authStore';
 
 interface AdminConfig {
   appName: string;
@@ -13,6 +14,7 @@ interface AdminConfig {
 }
 
 export function AdminSettings() {
+  const { user } = useAuthStore();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [config, setConfig] = useState<AdminConfig>({
@@ -25,10 +27,13 @@ export function AdminSettings() {
   });
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    if (user?.role === 'admin') {
+      loadSettings();
+    }
+  }, [user?.role]);
 
   async function loadSettings() {
+    if (user?.role !== 'admin') return;
     try {
       const res = await apiClient.get('/admin/settings');
       const data = res.data;
