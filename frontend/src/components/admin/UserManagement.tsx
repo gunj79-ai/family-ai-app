@@ -13,6 +13,8 @@ export function UserManagement() {
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [resettingPasswordUserId, setResettingPasswordUserId] = useState<string | null>(null);
   const [resetPasswordValue, setResetPasswordValue] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [createdPassword, setCreatedPassword] = useState({ username: '', password: '' });
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -64,6 +66,13 @@ export function UserManagement() {
       const response = await apiClient.post('/users', payload);
       console.log('User created:', response.data);
       toast.success(`User ${formData.username} created successfully`);
+      
+      // Show password modal so admin can save it
+      setCreatedPassword({
+        username: formData.username,
+        password: formData.password,
+      });
+      setShowPasswordModal(true);
       
       // Reset form and reload
       setFormData({
@@ -407,6 +416,76 @@ export function UserManagement() {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Password Created Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                <Lock className="w-6 h-6 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900">User Created Successfully!</h3>
+                <p className="text-sm text-slate-600">Save these credentials</p>
+              </div>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-amber-800 font-medium mb-2">⚠️ Important: Save this password now!</p>
+              <p className="text-xs text-amber-700">You won't be able to see this password again. Write it down or use the copy button.</p>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <div>
+                <label className="text-xs font-medium text-slate-600">Username</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex-1 px-3 py-2 bg-slate-100 rounded-lg font-mono text-sm">
+                    {createdPassword.username}
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(createdPassword.username);
+                      toast.success('Username copied!');
+                    }}
+                    className="px-3 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg transition-colors text-sm font-medium"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-slate-600">Password</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex-1 px-3 py-2 bg-slate-100 rounded-lg font-mono text-sm">
+                    {createdPassword.password}
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(createdPassword.password);
+                      toast.success('Password copied!');
+                    }}
+                    className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowPasswordModal(false);
+                setCreatedPassword({ username: '', password: '' });
+              }}
+              className="w-full px-4 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              I've Saved the Password
+            </button>
+          </div>
         </div>
       )}
     </div>

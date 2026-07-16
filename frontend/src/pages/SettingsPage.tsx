@@ -58,7 +58,7 @@ export function SettingsPage() {
 
     setPasswordLoading(true);
     try {
-      await apiClient.post('/auth/password', {
+      await apiClient.put('/auth/password', {
         currentPassword,
         newPassword,
       });

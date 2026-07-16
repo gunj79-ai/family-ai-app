@@ -9,6 +9,7 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useConfigStore } from '@/store/configStore';
 import { useTheme } from '@/hooks/useTheme';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,12 +56,14 @@ function AppContent() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-      <ToastContainer />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+        <ToastContainer />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

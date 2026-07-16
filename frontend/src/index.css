@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* iOS CRITICAL FIXES - Prevent zoom on input focus */
+input, textarea, select {
+  font-size: max(16px, 1rem) !important;
+}
+
+/* Disable double-tap zoom */
+* {
+  touch-action: manipulation;
+}
+
 @layer base {
   * { box-sizing: border-box; }
   body {

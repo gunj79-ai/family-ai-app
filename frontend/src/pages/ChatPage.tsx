@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '@/components/layout/AppShell';
 import { ChatWindow } from '@/components/chat/ChatWindow';
@@ -13,21 +13,28 @@ export function ChatPage() {
   const { activeChat, setActiveChat } = useChatStore();
   const { chats } = useChats();
   const { loadChat, createChat } = useChat();
+  const chatLoadedRef = useRef<string | null>(null);
 
   useEffect(() => {
+    // Prevent infinite re-render loop
+    if (chatId && chatLoadedRef.current === chatId) return;
+    if (!chatId && chatLoadedRef.current === 'initial') return;
+
     async function init() {
       if (chatId) {
         const found = chats.find((c: Chat) => c.id === chatId);
         if (found && found.id !== activeChat?.id) {
           await loadChat(found);
+          chatLoadedRef.current = chatId;
         }
       } else if (chats.length > 0 && !activeChat) {
         await loadChat(chats[0]);
         navigate(`/chat/${chats[0].id}`, { replace: true });
+        chatLoadedRef.current = 'initial';
       }
     }
     init();
-  }, [chatId, chats, activeChat, loadChat, navigate]);
+  }, [chatId]);
 
   return (
     <AppShell>

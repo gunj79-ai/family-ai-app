@@ -337,7 +337,7 @@ export function MessageInput({ chatId, onSend, disabled }: Props) {
               'disabled:bg-slate-50 dark:disabled:bg-gray-800 disabled:cursor-not-allowed opacity-disabled',
               'placeholder:text-slate-500 dark:placeholder:text-gray-400 dark:text-white'
             )}
-            style={{ minHeight: '48px', maxHeight: '200px' }}
+            style={{ minHeight: '48px', maxHeight: '200px', fontSize: '16px' }}
           />
           {text && (
             <span className="absolute bottom-3 right-4 text-xs font-medium text-slate-400 dark:text-gray-400 pointer-events-none">

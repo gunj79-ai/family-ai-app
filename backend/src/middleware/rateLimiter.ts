@@ -1,10 +1,13 @@
 import rateLimit from 'express-rate-limit';
+import { config } from '../config.js';
+
+const isDevelopment = config.NODE_ENV === 'development';
 
 // Auth endpoint limiter — tight
 // Prevents brute force on login
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // 20 attempts per 15 min per IP
+  max: isDevelopment ? 100 : 20, // More attempts in dev for testing
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many login attempts. Try again in 15 minutes.' },
@@ -15,7 +18,7 @@ export const authLimiter = rateLimit({
 // Prevents accidental infinite loops or runaway clients
 export const apiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 300, // 300 requests per minute per IP (generous for family use)
+  max: isDevelopment ? 1000 : 300, // Much higher in dev
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Rate limit exceeded. Slow down.' },
@@ -28,8 +31,8 @@ export const apiLimiter = rateLimit({
 
 // Strict limiter for password change + user creation
 export const sensitiveActionLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10,
+  windowMs: isDevelopment ? 5 * 60 * 1000 : 60 * 60 * 1000, // 5 min in dev, 1 hour in prod
+  max: isDevelopment ? 100 : 10, // 100 in dev for testing, 10 in prod
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many sensitive actions. Try again later.' },
