@@ -1,0 +1,70 @@
+services:
+  # Backend API Server
+  - type: web
+    name: family-ai-backend
+    runtime: node
+    region: oregon
+    plan: starter
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: JWT_SECRET
+        generateValue: true
+        sync: false
+      - key: JWT_EXPIRY
+        value: 7d
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: DEFAULT_MODEL
+        value: claude-haiku-4-5-20251001
+      - key: ESCALATION_MODEL
+        value: claude-sonnet-4-6
+      - key: PII_STRIPPING_ENABLED
+        value: true
+      - key: MAX_FILE_SIZE_MB
+        value: 10
+      - key: DATA_DIR
+        value: /opt/render/project/src/backend/data
+      - key: DB_PATH
+        value: /opt/render/project/src/backend/data/familyai.db
+      - key: UPLOADS_DIR
+        value: /opt/render/project/src/backend/data/uploads
+    autoDeploy: true
+    healthCheckPath: /api/health
+    disk:
+      name: family-ai-data
+      mountPath: /opt/render/project/src/backend/data
+      sizeGB: 1
+
+  # Frontend Static Site
+  - type: web
+    name: family-ai-frontend
+    runtime: static
+    region: oregon
+    buildCommand: cd frontend && npm install && npm run build && cp -r dist/* ../backend/public/
+    staticPublishPath: backend/public
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: family-ai-backend
+          property: host
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://family-ai-backend.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    autoDeploy: true
