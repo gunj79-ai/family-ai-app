@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let db: SqlJsDatabase;
 let SQL: Awaited<ReturnType<typeof initSqlJs>>;
-const dbPath = path.resolve(config.DB_PATH);
+const dbPath = config.DB_PATH; // Already resolved in config.ts
 
 /**
  * Wrapper around sql.js Database to provide a similar API to better-sqlite3
@@ -101,16 +101,18 @@ export function getDb(): PersistentDatabase {
 }
 
 export async function initDatabase(): Promise<void> {
+  console.log('[DB] Initializing database...');
+  console.log('[DB] DATA_DIR:', config.DATA_DIR);
+  console.log('[DB] DB_PATH:', config.DB_PATH);
+  console.log('[DB] UPLOADS_DIR:', config.UPLOADS_DIR);
+
   // Initialize sql.js
   SQL = await initSqlJs();
 
-  // Ensure data directory exists
-  const dataDirPath = path.resolve(config.DATA_DIR);
-  const uploadsDirPath = path.resolve(config.UPLOADS_DIR);
-
-  fs.mkdirSync(dataDirPath, { recursive: true });
-  fs.mkdirSync(path.join(uploadsDirPath, 'attachments'), { recursive: true });
-  fs.mkdirSync(path.join(uploadsDirPath, 'project-files'), { recursive: true });
+  // Ensure data directory exists (paths already resolved in config)
+  fs.mkdirSync(config.DATA_DIR, { recursive: true });
+  fs.mkdirSync(path.join(config.UPLOADS_DIR, 'attachments'), { recursive: true });
+  fs.mkdirSync(path.join(config.UPLOADS_DIR, 'project-files'), { recursive: true });
 
   // Load or create database
   let sqlDb: SqlJsDatabase;

@@ -18,6 +18,11 @@ function getEnv(key: string, defaultValue?: string): string {
 
 const NODE_ENV = getEnv('NODE_ENV', 'development');
 
+// Helper to resolve paths (absolute paths pass through, relative paths resolve from project root)
+function resolvePath(pathStr: string): string {
+  return path.isAbsolute(pathStr) ? pathStr : path.resolve(projectRoot, pathStr);
+}
+
 export const config = {
   // Server
   PORT: parseInt(getEnv('PORT', '3001')),
@@ -35,16 +40,16 @@ export const config = {
         ],
 
   // Security
-  JWT_SECRET: getEnv('JWT_SECRET'),
+  JWT_SECRET: getEnv('JWT_SECRET', ''),
   JWT_EXPIRY: getEnv('JWT_EXPIRY', '7d'),
 
-  // Paths (resolved relative to project root, not cwd)
-  DATA_DIR: path.resolve(projectRoot, getEnv('DATA_DIR', 'data')),
-  DB_PATH: path.resolve(projectRoot, getEnv('DB_PATH', 'data/familyai.db')),
-  UPLOADS_DIR: path.resolve(projectRoot, getEnv('UPLOADS_DIR', 'data/uploads')),
+  // Paths (absolute in production, relative to project root in dev)
+  DATA_DIR: resolvePath(getEnv('DATA_DIR', 'data')),
+  DB_PATH: resolvePath(getEnv('DB_PATH', 'data/familyai.db')),
+  UPLOADS_DIR: resolvePath(getEnv('UPLOADS_DIR', 'data/uploads')),
 
   // Claude API
-  ANTHROPIC_API_KEY: getEnv('ANTHROPIC_API_KEY'),
+  ANTHROPIC_API_KEY: getEnv('ANTHROPIC_API_KEY', ''),
   DEFAULT_MODEL: getEnv('DEFAULT_MODEL', 'claude-haiku-4-5-20251001'),
   ESCALATION_MODEL: getEnv('ESCALATION_MODEL', 'claude-sonnet-4-6'),
 

@@ -27,20 +27,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 // ─── JWT Secret Enforcement ───
-if (!config.JWT_SECRET || config.JWT_SECRET.length < 32) {
-  console.error('FATAL: JWT_SECRET is too short or missing.');
-  console.error('Set a random 64-character string in .env');
+if (!config.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET is missing.');
+  console.error('Set JWT_SECRET in your environment variables');
+  console.error('Generate one: node -e "console.log(require(\'crypto\').randomBytes(64).toString(\'hex\'))"');
+  process.exit(1);
+}
+
+if (config.JWT_SECRET.length < 32) {
+  console.error('FATAL: JWT_SECRET is too short (minimum 32 characters).');
+  console.error('Current length:', config.JWT_SECRET.length);
   process.exit(1);
 }
 
 if (config.JWT_SECRET === 'replace-with-a-random-64-char-string-here') {
-  console.error(
-    'FATAL: JWT_SECRET is still the placeholder value.'
-  );
-  console.error(
-    'Generate one: node -e "console.log(require(\'crypto\').randomBytes(64).toString(\'hex\'))"'
-  );
+  console.error('FATAL: JWT_SECRET is still the placeholder value.');
+  console.error('Generate one: node -e "console.log(require(\'crypto\').randomBytes(64).toString(\'hex\'))"');
   process.exit(1);
+}
+
+// Warn if Anthropic API key is missing
+if (!config.ANTHROPIC_API_KEY) {
+  console.warn('⚠️  WARNING: ANTHROPIC_API_KEY is not set. AI chat features will not work.');
 }
 
 // Security middleware
