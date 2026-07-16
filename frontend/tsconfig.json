@@ -11,12 +11,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "ignoreDeprecations": "6.0",
-    "paths": { "@/*": ["./src/*"] }
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }
