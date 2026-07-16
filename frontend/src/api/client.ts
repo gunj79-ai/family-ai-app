@@ -4,9 +4,14 @@ const getBaseURL = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
   if (envUrl) return envUrl;
   
-  // Always use port 3001 for backend, regardless of frontend port
-  // Works for both localhost (127.0.0.1:3001) and network IPs (192.168.x.x:3001)
+  // In production (deployed to render.com, etc), backend serves frontend
+  // Use relative URL so API calls go to same origin
   const hostname = window.location.hostname;
+  if (hostname.includes('render.com') || hostname.includes('vercel.app')) {
+    return ''; // Relative URL - same origin
+  }
+  
+  // Local development: backend on port 3001, frontend on 5173
   return `http://${hostname}:3001`;
 };
 
