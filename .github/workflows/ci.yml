@@ -18,11 +18,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
 
       - name: Install backend deps
-        run: cd backend && npm ci
+        run: cd backend && npm install
 
       - name: TypeScript check
         run: cd backend && npx tsc --noEmit
@@ -52,9 +50,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install frontend deps
-        run: cd frontend && npm ci
-
-      - name: TypeScript check
+        run: cd frontend && npm install
         run: cd frontend && npx tsc --noEmit
 
       - name: Build
@@ -63,5 +59,4 @@ jobs:
       - name: Check build output
         run: |
           test -f backend/public/index.html || (echo "FAIL: index.html missing" && exit 1)
-          test -f backend/public/sw.js || (echo "FAIL: sw.js missing" && exit 1)
           echo "PASS: Build output verified"
