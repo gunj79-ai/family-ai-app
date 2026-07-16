@@ -16,19 +16,23 @@ function getEnv(key: string, defaultValue?: string): string {
   return value || defaultValue!;
 }
 
+const NODE_ENV = getEnv('NODE_ENV', 'development');
+
 export const config = {
   // Server
   PORT: parseInt(getEnv('PORT', '3001')),
-  NODE_ENV: getEnv('NODE_ENV', 'development'),
-  CORS_ORIGINS: process.env.NODE_ENV === 'development' 
-    ? '*'  // Allow all origins in dev
-    : [
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'http://localhost:3001',
-        'https://family-ai-app-2.onrender.com',
-        'https://family-ai-backend-nfvj.onrender.com',
-      ],
+  NODE_ENV,
+  CORS_ORIGINS: process.env.CORS_ORIGINS 
+    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+    : NODE_ENV === 'development' 
+      ? '*'  // Allow all origins in dev
+      : [
+          'http://localhost:3000',
+          'http://localhost:5173',
+          'http://localhost:3001',
+          'https://family-ai-app-2.onrender.com',
+          'https://family-ai-backend-nfvj.onrender.com',
+        ],
 
   // Security
   JWT_SECRET: getEnv('JWT_SECRET'),
